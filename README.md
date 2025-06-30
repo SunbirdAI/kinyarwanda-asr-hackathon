@@ -82,5 +82,4 @@ The longest training run was 30 hours on a single H100 GPU. We used <150 GPU hou
 
 Model parameter count: 1.3B
 
-TODO: Get A100 real time factor
-(with batch size 1, so this can be speeded up).
+A100 real time factor is about 0.3 (processing 10 minutes of audio takes about 3 minutes). This is with batch size 1, and with no torch.compile, so can be speeded up. On an H100 we get about 10x real time.
