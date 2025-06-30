@@ -3,7 +3,7 @@
 ## Team
 
 [Sunbird AI](https://sunbird.ai) is a non-profit research team based in Uganda, where we create open models and systems for social benefit.
-Our main focus at the moment is in developing models to understand local languages (ASR, translation, LLMs),
+Our main focus at the moment is in developing models to understand African languages (ASR, translation, LLMs),
 so we were excited to see this hackathon. Thanks to [Digital Umuganda](https://digitalumuganda.com/) for making it happen!
 
 The team within Sunbird who worked on the hackathon (in alphabetical order) were Benjamin Akera, Evelyn Nafula Ouma, John Quinn and Patrick Walukagga.
