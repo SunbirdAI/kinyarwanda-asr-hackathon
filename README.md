@@ -74,6 +74,9 @@ After three epochs, validation loss did not improve.
 We did full parameter fine tuning on single H100 GPUs
 (not necessary though: we've found this model also to be trainable on 48GB cards such as RTX 6000 Ada; LoRA training is also possible).
 
+Inference was using beam search (`num_beams=5`), using a pipeline for examples greater than 30 seconds, and directly with `model.generate()` otherwise.
+On validation data, we got a WER of 8.8% and CER of 2.2%.
+
 ## GPU compute time
 
 The longest training run was 30 hours on a single H100 GPU. We used <150 GPU hours (with different specs, including smaller GPUs for explorations) for the whole hackathon.
