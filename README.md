@@ -1,4 +1,4 @@
-# Kinyarwanda ASR Hackathon entry: Sunbird AI
+# Kinyarwanda ASR Hackathon: 1st place solution
 
 ## Team
 
