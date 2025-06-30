@@ -67,10 +67,10 @@ Later we saw clarification from the organisers that it was allowed to fine-tune 
 so we could have used our own [Sunbird/asr-whisper-large-v3-salt](https://hf.co/Sunbird/asr-whisper-large-v3-salt) as a starting point,
 which may have improved the results - but by this time we'd already done the main training and it seemed to work OK.
 
-The supplied dev_test validation split was huge, with more than 9000 examples.
+The supplied `dev_test` validation split was huge, with more than 9000 examples.
 We used only a few hundred of these for validation, and the rest added to the training set.
 
-After three epochs, validation loss did not improve.
+After three epochs, validation loss stopped improving.
 We did full parameter fine tuning on single H100 GPUs
 (not necessary though: we've found this model also to be trainable on 48GB cards such as RTX 6000 Ada; LoRA training is also possible).
 
