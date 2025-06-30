@@ -30,6 +30,19 @@ The team within Sunbird who worked on the hackathon (in alphabetical order) were
 - Using the image categories as text prompts in Whisper.
 - Using the unlabelled Track C audio for semi-supervised learning.
 
+The model used for making the predictions is [here](https://huggingface.co/jq/whisper-large-v3-kin-track-b). For practical applications involving Kinyarwanda ASR, a better model is likely [this one](jq/whisper-large-v3-kin-nyn-lug-xog), which was an earlier Track C submission that is probably more robust in real-world conditions, being trained on other datasets including Common Voice and some related languages from Uganda with different speaking styles, and more realistic audio augmentation including representative background noise.
+
+## Filtering the training set
+
+Because the dataset was pretty big, and with some variation in file types (mostly webm but a few mp3s and other formats) we started by recompressing it to .ogg, which kept the quality but halved the size of the dataset and made it easier to experiment with. The size could actually be halved again by reducing the sample rate, since all the models we tried used 16 KHz audio, but we kept it at the original sample rates.
+
+Data quality is often the limiting factor for accuracy, and while this hackathon dataset is an amazing resource and overall well transcribed, there was some label noise that would but a ceiling on the accuracy that most models would be able to achieve. Most importantly, we estimate around 3% of the examples had the wrong label, i.e. the text transcription seemed to be for a different audio file.
+To try to mitigate this, we ran an earlier version of the model on as many of the training examples as we could, and looked for major discrepancies
+between the model prediction and the text label. If WER was greater than 90% then we dropped that example.
+We had time to process 125,000 of the training examples in this way and removed about 4,000 examples.
+If we'd been able to run this on the rest of the training data then we'd have had a bit more improvement - and it would have been better still if we could have worked out which audio samples the mismatched labels belonged to so that we could have fixed them instead of dropping them.
+We also excluded examples where the ratio of the text length to the audio duration was extremely high or low.
+
 ## Training details
 
 ### Text preprocessing
@@ -41,6 +54,11 @@ we used lower case unpunctuated text to train the model, so that all the model's
 
 We used Silero VAD to find non-speech parts of the audio. Whisper is essentially an LLM conditioned on audio,
 so for inputs with long periods of silence or non-speech, it loses this conditioning and has a tendency to hallucinate.
+We're still unsure if this helps though - we got better validation results when removing non-speech segments, but nothing changed on the public leaderboard.
+
+### Audio augmentation
+
+We add random noise to the audio samples to add some variation and make the training task a little more difficult. In earlier experiments we added realistic background noise from our open [Urban Noise Uganda](https://huggingface.co/datasets/Sunbird/urban-noise-uganda-61k) dataset collected in Kampala, but changed this later to just add white noise, as the test examples are all fairly free of background noise.
 
 ### Training schedule
 
@@ -56,19 +74,13 @@ After three epochs, validation loss did not improve.
 We did full parameter fine tuning on single H100 GPUs
 (not necessary though: we've found this model also to be trainable on 48GB cards such as RTX 6000 Ada; LoRA training is also possible).
 
-## Filtering the training set
-
-We estimate around 3% of the examples had the wrong label, i.e. the text transcription seemed to be for a different audio file.
-Therefore we ran an earlier version of the model on as many of the training examples as we could, and looked for major discrepancies
-between the model prediction and the text label (WER > 90%).
-We had time to process 125,000 of the training examples and removed about 4,000 examples this way.
-
 ## GPU compute time
 
-The longest training run was 30 hours on a single H100 GPU.
+The longest training run was 30 hours on a single H100 GPU. We used <150 GPU hours (with different specs, including smaller GPUs for explorations) for the whole hackathon.
 
 ## Model size and inference speed
 
 Model parameter count: 1.3B
 
 TODO: Get A100 real time factor
+(with batch size 1, so this can be speeded up).
