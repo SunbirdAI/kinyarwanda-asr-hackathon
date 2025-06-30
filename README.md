@@ -36,7 +36,7 @@ The model used for making the predictions is [here](https://huggingface.co/jq/wh
 
 Because the dataset was pretty big, and with some variation in file types (mostly webm but a few mp3s and other formats) we started by recompressing it to .ogg, which kept the quality but halved the size of the dataset and made it easier to experiment with. The size could actually be halved again by reducing the sample rate, since all the models we tried used 16 KHz audio, but we kept it at the original sample rates.
 
-Data quality is often the limiting factor for accuracy, and while this hackathon dataset is an amazing resource and overall well transcribed, there was some label noise that would but a ceiling on the accuracy that most models would be able to achieve. Most importantly, we estimate around 3% of the examples had the wrong label, i.e. the text transcription seemed to be for a different audio file.
+While this hackathon dataset is an amazing resource and overall seemed to be well transcribed, there was some label noise that would limit the accuracy of any model trained on it. Most importantly, we noticed that many of the examples seemed to have the wrong label, i.e. the text transcription seemed to be for a different audio file.
 To try to mitigate this, we ran an earlier version of the model on as many of the training examples as we could, and looked for major discrepancies
 between the model prediction and the text label. If WER was greater than 90% then we dropped that example.
 We had time to process 125,000 of the training examples in this way and removed about 4,000 examples.
